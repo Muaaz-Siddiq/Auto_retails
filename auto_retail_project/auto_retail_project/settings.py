@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -81,9 +82,18 @@ WSGI_APPLICATION = 'auto_retail_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'retail': {
         'ENGINE': 'django.db.backends.postgresql',  # Use PostgreSQL backend
         'NAME': 'retail_db',  # Name of your database
+        'USER': 'postgres',  # Your PostgreSQL username
+        'PASSWORD': 'admin',  # Your PostgreSQL password
+        'HOST': 'localhost',  # Set to your database host, e.g., 'localhost' or an AWS RDS endpoint
+        'PORT': '5432',  # PostgreSQL port
+    },
+    
+    'brands': {
+        'ENGINE': 'django.db.backends.postgresql',  # Use PostgreSQL backend
+        'NAME': 'brands_db',  # Name of your database
         'USER': 'postgres',  # Your PostgreSQL username
         'PASSWORD': 'admin',  # Your PostgreSQL password
         'HOST': 'localhost',  # Set to your database host, e.g., 'localhost' or an AWS RDS endpoint
@@ -132,3 +142,20 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Token settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),  # Short-lived access token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # Longer-lived refresh token
+    'ROTATE_REFRESH_TOKENS': True,  # Generates a new refresh token with each refresh request
+    # 'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old refresh tokens
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Token type in Authorization header
+}
